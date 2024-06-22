@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Checkout</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #000000, #ff0000 100%);
+        }
+        h1 {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 40px;
+        }
+        .checkout-container {
+            background: linear-gradient(135deg, #ff0000 0%, #000000 100%);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            color: white; /* Set text color to white */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for smooth transform and shadow change */
+        }
+        .checkout-container:hover {
+            transform: translateY(-10px); /* Move the element slightly upwards */
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2); /* Increase the shadow on hover */
+        }
+        .checkout-container h1, .checkout-container h2, .checkout-container h3 {
+            margin-bottom: 20px;
+            color: white; /* Set text color to white */
+        }
+        .checkout-container select, .checkout-container button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        .checkout-container button {
+            background: linear-gradient(135deg, #ff0000 0%, #000000 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Transition for smooth background color change */
+        }
+        .checkout-container button:hover {
+            background: linear-gradient(135deg, #000000, #ff0000 100%);
+        }
+        .checkout-container .currency-symbol {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Checkout</h1>
+    <div class="checkout-container">
+        <div>
+            <h2>Plan: <span id="selected-plan">  </span></h2>
+            <h3>Price: <span id="price"></span> <span class="currency-symbol" id="currency-symbol">$</span> <span id="currency">USD</span></h3>
+        </div>
+        <div>
+            <label for="currency-selector">Choose Currency:</label>
+            <select id="currency-selector">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="KWD">KWD</option>
+                <option value="BHD">BHD</option>
+                <option value="OMR">OMR</option>
+                <option value="JOD">JOD</option>
+                <option value="KYD">KYD</option>
+                <option value="GIP">GIP</option>
+                <option value="CHF">CHF</option>
+            </select>
+        </div>
+        <button id="buy-button">Buy Now</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const params = new URLSearchParams(window.location.search);
+            const plan = params.get('plan');
+            const price = parseFloat(params.get('price'));
+            const currency = 'USD';
+
+            document.getElementById('selected-plan').textContent = plan;
+            document.getElementById('price').textContent = price.toFixed(2);
+            document.getElementById('currency').textContent = currency;
+
+            const currencyRates = {
+                USD: 1,
+                EUR: 0.85,
+                GBP: 0.75,
+                KWD: 0.31,
+                BHD: 0.38,
+                OMR: 0.39,
+                JOD: 0.71,
+                KYD: 0.83,
+                GIP: 0.75,
+                CHF: 0.91
+            };
+
+            const currencySymbols = {
+                USD: '$',
+                EUR: '€',
+                GBP: '£',
+                KWD: 'د.ك',
+                BHD: '.د.ب',
+                OMR: 'ر.ع.',
+                JOD: 'د.ا',
+                KYD: '$',
+                GIP: '£',
+                CHF: 'CHF'
+            };
+
+            document.getElementById('currency-selector').addEventListener('change', function (e) {
+                const selectedCurrency = e.target.value;
+                const convertedPrice = price * currencyRates[selectedCurrency];
+                document.getElementById('price').textContent = convertedPrice.toFixed(2);
+                document.getElementById('currency-symbol').textContent = currencySymbols[selectedCurrency];
+                document.getElementById('currency').textContent = selectedCurrency;
+            });
+
+            document.getElementById('buy-button').addEventListener('click', function () {
+                alert('Proceeding to buy ' + plan + ' plan for ' + document.getElementById('price').textContent + ' ' + document.getElementById('currency').textContent);
+                // Here you would typically redirect to a payment gateway or process the order further
+            });
+        });
+    </script>
+
+
+</body>
+</html>
